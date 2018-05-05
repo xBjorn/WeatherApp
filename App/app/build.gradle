@@ -18,6 +18,12 @@ android {
     }
 }
 
+
+repositories {
+    //Repositories, waar hij alle dependencies uit pulled
+    maven { url 'https://oss.sonatype.org/content/groups/public/' }
+}
+
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation 'com.android.support:appcompat-v7:27.1.1'
@@ -25,4 +31,8 @@ dependencies {
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'com.android.support.test:runner:1.0.2'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
+
+    //Om JSON te kunnen lezen
+    implementation 'org.json:json:20090211'
 }
+
