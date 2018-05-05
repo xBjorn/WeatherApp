@@ -4,17 +4,14 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.TextView;
-import java.io.BufferedReader;
+import java.io.BufferedInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.Reader;
-import java.net.MalformedURLException;
+import java.net.*;
 import java.net.URL;
-import java.nio.charset.Charset;
 
-import org.json.JSONException;
-import org.json.JSONObject;
+
 
 
 
@@ -22,8 +19,13 @@ import org.json.JSONObject;
 public class MainActivity extends AppCompatActivity {
 
 
+
     //Globale variabele
     String inputLocatie;
+    String bo;
+
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,49 +33,43 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
     }
 
-        //Code voor URL request en JSON te lezen
-        private static String readAll(Reader rd) throws IOException {
-            StringBuilder sb = new StringBuilder();
-            int cp;
-            while ((cp = rd.read()) != -1) {
-                sb.append((char) cp);
+
+    //Lees de InputStream en converteer van Bytes naar String
+    private String readStream(InputStream is) {
+        try {
+            ByteArrayOutputStream bo = new ByteArrayOutputStream();
+            int i = is.read();
+            while(i != -1) {
+                bo.write(i);
+                i = is.read();
             }
-            return sb.toString();
+            return bo.toString();
+        } catch (IOException e) {
+            return "";
         }
+    }
 
-        //Code voor URL request en JSON te lezen
-        public static JSONObject readJsonFromUrl(String url) throws IOException, JSONException {
-            InputStream is = new URL(url).openStream();
-            try {
-                BufferedReader rd = new BufferedReader(new InputStreamReader(is, Charset.forName("UTF-8")));
-                String jsonText = readAll(rd);
-                JSONObject json = new JSONObject(jsonText);
-                return json;
-            } finally {
-                is.close();
-            }
-        }
-
-
-
-
-
-    public void doeIets(View view) throws IOException, JSONException {
+    public void doeIets(View view) throws IOException   {
         //Update de waarde van de input van de TextView bij elke klik op de button
         TextView textView = (TextView) findViewById(R.id.plaatsInput);
         inputLocatie = textView.getText().toString();
-        System.out.println("http://www.weerlive.nl/api/json-data-10min.php?key=36e9560c2e&locatie=" + inputLocatie);
-        JSONObject json = readJsonFromUrl("http://weerlive.nl/api/json-data-10min.php?key=36e9560c2e&locatie=" + inputLocatie);
-        System.out.println(json.toString());
+        System.out.println(bo);
 
-  }
 
-  /*  public void main(String[] args) throws IOException, JSONException {
-        //Voeg de input van de TextView aan de URL toe
-        JSONObject json = readJsonFromUrl("http://weerlive.nl/api/json-data-10min.php?key=36e9560c2e&locatie="+inputLocatie);
-        //Pak de temperatuur uit de JSON array
-        TextView tempOut = (TextView) findViewById(R.id.txtTemp);
-        tempOut.setText(json.getString("temp"));
-        System.out.println("Test main");
-    }*/
-}
+        URL url = new URL("http://www.android.com/");
+        HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
+        try {
+            InputStream in = new BufferedInputStream(urlConnection.getInputStream());
+            readStream(in);
+        } finally {
+            urlConnection.disconnect();
+        }
+
+
+
+    }
+
+    }
+
+
+
