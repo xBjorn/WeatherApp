@@ -9,6 +9,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.charset.Charset;
 
@@ -57,19 +58,22 @@ public class MainActivity extends AppCompatActivity {
 
 
 
-    public void doeIets(View view){
+    public void doeIets(View view) throws IOException, JSONException {
         //Update de waarde van de input van de TextView bij elke klik op de button
-        TextView textView = (TextView) findViewById(R.id.test);
-
+        TextView textView = (TextView) findViewById(R.id.plaatsInput);
         inputLocatie = textView.getText().toString();
+        System.out.println("http://www.weerlive.nl/api/json-data-10min.php?key=36e9560c2e&locatie=" + inputLocatie);
+        JSONObject json = readJsonFromUrl("http://weerlive.nl/api/json-data-10min.php?key=36e9560c2e&locatie=" + inputLocatie);
+        System.out.println(json.toString());
 
   }
 
-    public void main(String[] args) throws IOException, JSONException {
+  /*  public void main(String[] args) throws IOException, JSONException {
         //Voeg de input van de TextView aan de URL toe
         JSONObject json = readJsonFromUrl("http://weerlive.nl/api/json-data-10min.php?key=36e9560c2e&locatie="+inputLocatie);
         //Pak de temperatuur uit de JSON array
         TextView tempOut = (TextView) findViewById(R.id.txtTemp);
         tempOut.setText(json.getString("temp"));
-    }
+        System.out.println("Test main");
+    }*/
 }
